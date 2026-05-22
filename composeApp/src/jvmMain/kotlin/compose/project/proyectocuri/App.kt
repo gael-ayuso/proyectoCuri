@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import controllers.ContactoController
@@ -16,10 +17,8 @@ fun App() {
     val controller = remember { ContactoController() }
     var listaContactos by remember { mutableStateOf(controller.readAll()) }
 
-    // Este estado controla si la zona de agregar contacto es visible o no
     var mostrarFormulario by remember { mutableStateOf(false) }
 
-    // Estados para los campos de texto dentro del formulario
     var txtNombre by remember { mutableStateOf("") }
     var txtFecha by remember { mutableStateOf("2000-01-01") }
     var txtTelefono by remember { mutableStateOf("") }
@@ -43,10 +42,26 @@ fun App() {
             LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
                 items(listaContactos) { contacto ->
                     Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Nombre: ${contacto.name}", style = MaterialTheme.typography.bodyLarge)
-                            Text("Cumple: ${contacto.birthDate} | Tel: ${contacto.phoneNumber}")
-                            Text("Email: ${contacto.email}")
+                        //Alinear datos
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("Nombre: ${contacto.name}", style = MaterialTheme.typography.bodyLarge)
+                                Text("Cumple: ${contacto.birthDate} | Tel: ${contacto.phoneNumber}")
+                                Text("Email: ${contacto.email}")
+                            }
+
+                            // Botón para eliminar un contacto
+                            Button(
+                                onClick = {
+                                    controller.delete(contacto)
+                                    listaContactos = controller.readAll()
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                            ) { Text("Borrar") }
                         }
                     }
                 }
@@ -78,7 +93,6 @@ fun App() {
 
                             controller.create(nuevoContacto)
                             listaContactos = controller.readAll()
-
                             // clean all
                             txtNombre = ""
                             txtTelefono = ""
@@ -93,9 +107,8 @@ fun App() {
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { mostrarFormulario = false }) {
-                        Text("Cancelar")
-                    }
+                    TextButton(onClick = { mostrarFormulario = false })
+                    { Text("Cancelar") }
                 }
             )
         }
