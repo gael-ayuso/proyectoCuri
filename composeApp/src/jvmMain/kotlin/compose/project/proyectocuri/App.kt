@@ -14,10 +14,10 @@ import java.time.LocalDate
 @Composable
 fun App() {
     val controller = remember { ContactoController() }
+    var listaContactos by remember { mutableStateOf(controller.readAll()) }
 
     // Este estado controla si la zona de agregar contacto es visible o no
     var mostrarFormulario by remember { mutableStateOf(false) }
-
 
     MaterialTheme {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -27,7 +27,23 @@ fun App() {
             ) {
                 Text("Agregar contacto")
             }
+            Spacer(modifier = Modifier.height(16.dp))
 
+            // Lista de contactos
+            Text("Lista de Contactos", style = MaterialTheme.typography.titleLarge)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                items(listaContactos) { contacto ->
+                    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text("Nombre: ${contacto.name}", style = MaterialTheme.typography.bodyLarge)
+                            Text("Cumple: ${contacto.birthDate} | Tel: ${contacto.phoneNumber}")
+                            Text("Email: ${contacto.email}")
+                        }
+                    }
+                }
+            }
         }
 
     }
