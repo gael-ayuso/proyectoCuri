@@ -19,6 +19,13 @@ fun App() {
     // Este estado controla si la zona de agregar contacto es visible o no
     var mostrarFormulario by remember { mutableStateOf(false) }
 
+    // Estados para los campos de texto dentro del formulario
+    var txtNombre by remember { mutableStateOf("") }
+    var txtFecha by remember { mutableStateOf("2000-01-01") }
+    var txtTelefono by remember { mutableStateOf("") }
+    var txtCorreo by remember { mutableStateOf("") }
+    var mensajeError by remember { mutableStateOf("") }
+
     MaterialTheme {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             Button(
@@ -46,5 +53,51 @@ fun App() {
             }
         }
 
+        // Pop up para agregar contactos
+        if (mostrarFormulario) {
+            AlertDialog(
+                onDismissRequest = { mostrarFormulario = false }, // se cierra con un missclick xd
+                title = { Text("Nuevo Contacto") },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        TextField(value = txtNombre, onValueChange = { txtNombre = it }, label = { Text("Nombre") })
+                        TextField(value = txtFecha, onValueChange = { txtFecha = it }, label = { Text("Fecha (AAAA-MM-DD)") })
+                        TextField(value = txtTelefono, onValueChange = { txtTelefono = it }, label = { Text("Teléfono") })
+                        TextField(value = txtCorreo, onValueChange = { txtCorreo = it }, label = { Text("Correo") })
+
+                        if (mensajeError.isNotEmpty()) {
+                            Text(mensajeError, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        try {
+                            val fecha = LocalDate.parse(txtFecha)
+                            val nuevoContacto = Contacto(txtNombre, fecha, txtTelefono, txtCorreo)
+
+                            controller.create(nuevoContacto)
+                            listaContactos = controller.readAll()
+
+                            // clean all
+                            txtNombre = ""
+                            txtTelefono = ""
+                            txtCorreo = ""
+                            mensajeError = ""
+                            mostrarFormulario = false
+                        } catch (e: Exception) {
+                            mensajeError = e.message ?: "Datos inválidos"
+                        }
+                    }) {
+                        Text("Guardar")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { mostrarFormulario = false }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
     }
 }
