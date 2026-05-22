@@ -1,4 +1,6 @@
-package models
+package controllers
+
+import models.Contacto
 
 interface ControllerDAO {
 
