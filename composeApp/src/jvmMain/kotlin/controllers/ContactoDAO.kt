@@ -2,8 +2,7 @@ package controllers
 
 import models.Contacto
 
-interface ControllerDAO {
-
+interface ContactoDAO {
     fun create(contacto: Contacto)
     fun readByName(name: String): Contacto?
     fun readAll(): List<Contacto>

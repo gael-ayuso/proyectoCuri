@@ -2,7 +2,7 @@ package controllers
 
 import models.Contacto
 
-class ContactoController: ControllerDAO {
+class ContactoController: ContactoDAO {
     override fun create(contacto: Contacto) {
         TODO("Not yet implemented")
     }
