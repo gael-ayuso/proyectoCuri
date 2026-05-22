@@ -1,6 +1,7 @@
 package controllers
 
 import models.Contacto
+import models.ContactoDAO
 
 class ContactoController: ContactoDAO {
     override fun create(contacto: Contacto) {

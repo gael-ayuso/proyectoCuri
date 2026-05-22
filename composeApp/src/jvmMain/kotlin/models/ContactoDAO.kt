@@ -1,6 +1,4 @@
-package controllers
-
-import models.Contacto
+package models
 
 interface ContactoDAO {
     fun create(contacto: Contacto)
