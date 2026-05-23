@@ -34,5 +34,8 @@ data class Contacto(
         require(Regex("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+\$").matches(email)) {
             "El formato del email no es válido"
         }
+        require(Regex("^[0-9]+\$").matches(phoneNumber)) {
+            "El número de teléfono solo debe contener dígitos"
+        }
     }
 }
