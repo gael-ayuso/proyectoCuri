@@ -13,6 +13,7 @@ import ui.components.FormularioContacto
 import ui.components.MenuFiltros
 import ui.components.TarjetaContacto
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
     val controller = remember { ContactoController() }
@@ -21,7 +22,6 @@ fun App() {
     var mostrarFormulario by remember { mutableStateOf(false) }
     var textoBusqueda by remember { mutableStateOf("") }
     var contactoParaBorrar by remember { mutableStateOf<Contacto?>(null) }
-    // NUEVO ESTADO: Guarda el contacto que está siendo editado
     var contactoEnEdicion by remember { mutableStateOf<Contacto?>(null) }
 
     val listaMostrada = if (textoBusqueda.isBlank()) {
@@ -31,50 +31,65 @@ fun App() {
     }
 
     MaterialTheme {
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-
-            Button(
-                onClick = { mostrarFormulario = true },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
-            ) { Text("Agregar contacto") }
-
-            OutlinedTextField(
-                value = textoBusqueda,
-                onValueChange = { textoBusqueda = it },
-                label = { Text("Buscar") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            MenuFiltros(
-                onOrdenCambio = { indiceSeleccionado ->
-                    when (indiceSeleccionado) {
-                        0 -> listaCompleta = controller.readAll() // Por Defecto
-                        1 -> listaCompleta = controller.obtenerContactosOrdenAlfabetico() // A-Z
-                        2 -> listaCompleta = controller.obtenerContactosPorCumpleanosProximo() // Cumpleaños
-                    }
-                }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("Directorio", style = MaterialTheme.typography.titleLarge)
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                items(listaMostrada) { contacto ->
-                    TarjetaContacto(
-                        contacto = contacto,
-                        onDeleteClick = {
-                            // En lugar de borrarlo directamente, lo guardamos en el estado
-                            // Esto detonará automáticamente el AlertDialog de abajo
-                            contactoParaBorrar = contacto
-                        },
-                        onEditClick = {
-                            contactoEnEdicion = contacto
-                            mostrarFormulario = true
-                        }
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Directorio Telefónico", style = MaterialTheme.typography.titleLarge) },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     )
+                )
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = { mostrarFormulario = true },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ) { Text("+", style = MaterialTheme.typography.headlineMedium) }
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp)
+            ) {
+                OutlinedTextField(
+                    value = textoBusqueda,
+                    onValueChange = { textoBusqueda = it },
+                    label = { Text("Buscar contacto") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                MenuFiltros(
+                    onOrdenCambio = { indiceSeleccionado ->
+                        when (indiceSeleccionado) {
+                            0 -> listaCompleta = controller.readAll()
+                            1 -> listaCompleta = controller.obtenerContactosOrdenAlfabetico()
+                            2 -> listaCompleta = controller.obtenerContactosPorCumpleanosProximo()
+                        }
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                    items(listaMostrada) { contacto ->
+                        TarjetaContacto(
+                            contacto = contacto,
+                            onDeleteClick = {
+                                contactoParaBorrar = contacto
+                            },
+                            onEditClick = {
+                                contactoEnEdicion = contacto
+                                mostrarFormulario = true
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -82,7 +97,7 @@ fun App() {
         // CONFIRMACIÓN DE BORRADO
         if (contactoParaBorrar != null) {
             AlertDialog(
-                onDismissRequest = { contactoParaBorrar = null }, // se cancela con missclick
+                onDismissRequest = { contactoParaBorrar = null },
                 title = { Text("Confirmar eliminación") },
                 text = { Text("¿Estás seguro de que deseas eliminar a ${contactoParaBorrar?.name}? Esta acción no se puede deshacer.") },
                 confirmButton = {
@@ -101,16 +116,15 @@ fun App() {
             )
         }
 
-        //Formulario de agregacion/edicion
+        // Formulario de agregación/edición
         if (mostrarFormulario) {
             FormularioContacto(
                 contactoAEditar = contactoEnEdicion,
                 onDismiss = {
                     mostrarFormulario = false
-                    contactoEnEdicion = null // Limpiamos al cancelar
+                    contactoEnEdicion = null
                 },
                 onSave = { contactoGuardado ->
-                    // Si la variable tiene datos, estamos editando; si no, es nuevo
                     if (contactoEnEdicion != null) {
                         controller.update(contactoGuardado)
                     } else {
@@ -119,7 +133,7 @@ fun App() {
 
                     listaCompleta = controller.readAll()
                     mostrarFormulario = false
-                    contactoEnEdicion = null // Limpiamos al guardar
+                    contactoEnEdicion = null
                 }
             )
         }

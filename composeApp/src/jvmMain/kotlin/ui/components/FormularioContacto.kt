@@ -38,9 +38,16 @@ fun FormularioContacto(
         onDismissRequest = onDismiss,
         title = { Text(if (contactoAEditar != null) "Editar Contacto" else "Nuevo Contacto") },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
 
-                OutlinedTextField(value = txtNombre, onValueChange = { txtNombre = it }, label = { Text("Nombre") })
+                OutlinedTextField(
+                    value = txtNombre,
+                    onValueChange = { txtNombre = it },
+                    label = { Text("Nombre Completo") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
                 OutlinedTextField(
                     value = fechaSeleccionada.format(formateadorVista),
                     onValueChange = { },
@@ -52,15 +59,34 @@ fun FormularioContacto(
                     colors = OutlinedTextFieldDefaults.colors(
                         disabledTextColor = MaterialTheme.colorScheme.onSurface,
                         disabledBorderColor = MaterialTheme.colorScheme.outline,
-                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
 
-                OutlinedTextField(value = txtTelefono, onValueChange = { txtTelefono = it }, label = { Text("Teléfono") })
-                OutlinedTextField(value = txtCorreo, onValueChange = { txtCorreo = it }, label = { Text("Correo") })
+                OutlinedTextField(
+                    value = txtTelefono,
+                    onValueChange = { txtTelefono = it },
+                    label = { Text("Teléfono") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                OutlinedTextField(
+                    value = txtCorreo,
+                    onValueChange = { txtCorreo = it },
+                    label = { Text("Correo Electrónico") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
 
                 if (mensajeError.isNotEmpty()) {
-                    Text(mensajeError, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        text = mensajeError,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
                 }
             }
         },
@@ -101,8 +127,6 @@ fun FormularioContacto(
             dismissButton = {
                 TextButton(onClick = { mostrarCalendario = false }) { Text("Cancelar") }
             }
-        ) {
-            DatePicker(state = datePickerState)
-        }
+        ) { DatePicker(state = datePickerState) }
     }
 }
