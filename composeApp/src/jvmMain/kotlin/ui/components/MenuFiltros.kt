@@ -13,7 +13,6 @@ fun MenuFiltros(
     var seleccionActual by remember { mutableStateOf(opciones[0]) }
 
     Box {
-        // Usamos la flecha Unicode "▼" directamente en el string, cero dependencias extra
         OutlinedButton(onClick = { expandido = true }) {
             Text("Ordenar: $seleccionActual ▼")
         }
