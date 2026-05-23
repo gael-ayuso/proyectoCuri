@@ -34,8 +34,8 @@ class ContactoDAOJSON : ContactoDAO {
 
     override fun update(contacto: Contacto) {
         val listaActual = readAll().toMutableList()
-        // Buscamos el contacto por su nombre para reemplazarlo
-        val indice = listaActual.indexOfFirst { it.name.equals(contacto.name, ignoreCase = true) }
+        // Ahora buscamos exactamente por el ID invisible
+        val indice = listaActual.indexOfFirst { it.id == contacto.id }
 
         if (indice != -1) {
             listaActual[indice] = contacto
@@ -45,8 +45,8 @@ class ContactoDAOJSON : ContactoDAO {
 
     override fun delete(contacto: Contacto) {
         val listaActual = readAll().toMutableList()
-
-        listaActual.remove(contacto)
+        // Borramos usando una función que filtra por el ID
+        listaActual.removeAll { it.id == contacto.id }
         guardarTodos(listaActual)
     }
 
