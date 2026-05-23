@@ -22,6 +22,7 @@ fun TarjetaContacto(
     onEditClick: () -> Unit
 ) {
     var expandido by remember { mutableStateOf(false) }
+    //Es la primera letra del contacto y sirve para el icono
     val inicial = contacto.name.trim().firstOrNull()?.uppercaseChar()?.toString() ?: "?"
 
     Card(
