@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import controllers.ContactoController
 import ui.components.FormularioContacto
+import ui.components.MenuFiltros
 import ui.components.TarjetaContacto
 
 @Composable
@@ -45,29 +46,15 @@ fun App() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Botones de ordenamiento
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Button(
-                    onClick = { listaCompleta = controller.obtenerContactosOrdenAlfabetico() },
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                ) { Text("A-Z") }
-
-                Button(
-                    onClick = { listaCompleta = controller.obtenerContactosPorCumpleanosProximo() },
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                ) { Text("Cumpleanios") }
-
-                Button(
-                    onClick = { listaCompleta = controller.readAll() },
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                ) { Text("Restaurar") }
-            }
+            MenuFiltros(
+                onOrdenCambio = { indiceSeleccionado ->
+                    when (indiceSeleccionado) {
+                        0 -> listaCompleta = controller.readAll() // Por Defecto
+                        1 -> listaCompleta = controller.obtenerContactosOrdenAlfabetico() // A-Z
+                        2 -> listaCompleta = controller.obtenerContactosPorCumpleanosProximo() // Cumpleaños
+                    }
+                }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
             Text("Directorio", style = MaterialTheme.typography.titleLarge)
