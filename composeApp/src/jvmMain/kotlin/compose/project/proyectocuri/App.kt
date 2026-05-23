@@ -62,27 +62,30 @@ fun App() {
 
             //Lista de contactos
             LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                // Usamos la lista filtrada, no la original
-                items(listaMostrada) { contacto -> TarjetaContacto(
+                items(listaMostrada) { contacto ->
+                    TarjetaContacto(
                         contacto = contacto,
-                        onDelete = {
+                        onDeleteClick = {
                             controller.delete(contacto)
-                            listaCompleta = controller.readAll() // Refrescamos la fuente de verdad
+                            listaCompleta = controller.readAll()
+                        },
+                        onEditClick = {
+                            // todo: logica de edicion xd
                         }
                     )
                 }
             }
-        }
 
-        if (mostrarFormulario) {
-            FormularioContacto(
-                onDismiss = { mostrarFormulario = false },
-                onSave = { nuevoContacto ->
-                    controller.create(nuevoContacto)
-                    listaCompleta = controller.readAll() // Refrescamos la lista original
-                    mostrarFormulario = false
-                }
-            )
+            if (mostrarFormulario) {
+                FormularioContacto(
+                    onDismiss = { mostrarFormulario = false },
+                    onSave = { nuevoContacto ->
+                        controller.create(nuevoContacto)
+                        listaCompleta = controller.readAll() // Refrescamos la lista original
+                        mostrarFormulario = false
+                    }
+                )
+            }
         }
     }
 }
