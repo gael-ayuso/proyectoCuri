@@ -32,8 +32,7 @@ fun TarjetaContacto(
             .clickable { expandido = !expandido }
             .animateContentSize(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
+    ) { Column(
             modifier = Modifier.padding(16.dp)
         ) {
             Row(
@@ -120,16 +119,12 @@ fun TarjetaContacto(
                     OutlinedButton(
                         onClick = onEditClick,
                         modifier = Modifier.padding(end = 8.dp)
-                    ) {
-                        Text("Editar")
-                    }
+                    ) { Text("Editar") }
 
                     Button(
                         onClick = onDeleteClick,
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-                    ) {
-                        Text(" Borrar")
-                    }
+                    ) { Text(" Borrar") }
                 }
             }
         }
