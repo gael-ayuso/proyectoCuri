@@ -10,6 +10,20 @@ class ContactoController : ContactoDAO {
     private val dao: ContactoDAO = ContactoDAOJSON()
 
     override fun create(contacto: Contacto) {
+        val listaActual = dao.readAll()
+
+        // Verificamos si ya existe alguien con:
+        // mismo nombre o correo electrónico.
+        val existeDuplicado = listaActual.any {
+            it.name.equals(contacto.name, ignoreCase = true) ||
+                    it.email.equals(contacto.email, ignoreCase = true)
+        }
+
+        if (existeDuplicado) {
+            // Si existe, lanzamos un error
+            throw Exception("Ya existe un contacto con ese nombre o correo electrónico.")
+        }
+
         dao.create(contacto)
     }
 
