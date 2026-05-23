@@ -8,7 +8,7 @@ import java.io.File
 
 class ContactoDAOJSON : ContactoDAO {
 
-    private val archivo = File("src/contactos.json")
+    private val archivo = File("data/contactos.json")
 
     override fun readAll(): List<Contacto> {
         // Si el archivo no existe o está vacío, devolvemos una lista vacía
