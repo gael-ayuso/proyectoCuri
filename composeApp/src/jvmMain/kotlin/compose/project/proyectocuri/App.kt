@@ -21,6 +21,8 @@ fun App() {
     var mostrarFormulario by remember { mutableStateOf(false) }
     var textoBusqueda by remember { mutableStateOf("") }
     var contactoParaBorrar by remember { mutableStateOf<Contacto?>(null) }
+    // NUEVO ESTADO: Guarda el contacto que está siendo editado
+    var contactoEnEdicion by remember { mutableStateOf<Contacto?>(null) }
 
     val listaMostrada = if (textoBusqueda.isBlank()) {
         listaCompleta
@@ -69,7 +71,8 @@ fun App() {
                             contactoParaBorrar = contacto
                         },
                         onEditClick = {
-                            TODO("Implementar la lógica de edición")
+                            contactoEnEdicion = contacto
+                            mostrarFormulario = true
                         }
                     )
                 }
@@ -98,13 +101,25 @@ fun App() {
             )
         }
 
+        //Formulario de agregacion/edicion
         if (mostrarFormulario) {
             FormularioContacto(
-                onDismiss = { mostrarFormulario = false },
-                onSave = { nuevoContacto ->
-                    controller.create(nuevoContacto)
+                contactoAEditar = contactoEnEdicion,
+                onDismiss = {
+                    mostrarFormulario = false
+                    contactoEnEdicion = null // Limpiamos al cancelar
+                },
+                onSave = { contactoGuardado ->
+                    // Si la variable tiene datos, estamos editando; si no, es nuevo
+                    if (contactoEnEdicion != null) {
+                        controller.update(contactoGuardado)
+                    } else {
+                        controller.create(contactoGuardado)
+                    }
+
                     listaCompleta = controller.readAll()
                     mostrarFormulario = false
+                    contactoEnEdicion = null // Limpiamos al guardar
                 }
             )
         }

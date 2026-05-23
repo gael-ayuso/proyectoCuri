@@ -10,30 +10,45 @@ import models.Contacto
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormularioContacto(
+    contactoAEditar: Contacto? = null, // NUEVO: Si llega nulo es Creación, si trae datos es Edición
     onDismiss: () -> Unit,
     onSave: (Contacto) -> Unit
 ) {
-    var txtNombre by remember { mutableStateOf("") }
-    var txtTelefono by remember { mutableStateOf("") }
-    var txtCorreo by remember { mutableStateOf("") }
+    // Inicializamos con los datos del contacto o vacíos
+    var txtNombre by remember { mutableStateOf(contactoAEditar?.name ?: "") }
+    var txtTelefono by remember { mutableStateOf(contactoAEditar?.phoneNumber ?: "") }
+    var txtCorreo by remember { mutableStateOf(contactoAEditar?.email ?: "") }
     var mensajeError by remember { mutableStateOf("") }
 
-    var fechaSeleccionada by remember { mutableStateOf(LocalDate.now()) }
+    var fechaSeleccionada by remember { mutableStateOf(contactoAEditar?.birthDate ?: LocalDate.now()) }
     var mostrarCalendario by remember { mutableStateOf(false) }
     val formateadorVista = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val datePickerState = rememberDatePickerState()
+
+    // Inicializamos el calendario en la fecha del contacto
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = contactoAEditar?.birthDate?.atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli()
+    )
+
+    val esEdicion = contactoAEditar != null
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Nuevo Contacto") },
+        title = { Text(if (esEdicion) "Editar Contacto" else "Nuevo Contacto") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                TextField(value = txtNombre, onValueChange = { txtNombre = it }, label = { Text("Nombre") })
+                // El nombre se bloquea en edición porque es nuestro identificador para buscar en el JSON
+                OutlinedTextField(
+                    value = txtNombre,
+                    onValueChange = { txtNombre = it },
+                    label = { Text("Nombre") },
+                    enabled = !esEdicion
+                )
 
                 OutlinedTextField(
                     value = fechaSeleccionada.format(formateadorVista),
@@ -50,8 +65,8 @@ fun FormularioContacto(
                     )
                 )
 
-                TextField(value = txtTelefono, onValueChange = { txtTelefono = it }, label = { Text("Teléfono") })
-                TextField(value = txtCorreo, onValueChange = { txtCorreo = it }, label = { Text("Correo") })
+                OutlinedTextField(value = txtTelefono, onValueChange = { txtTelefono = it }, label = { Text("Teléfono") })
+                OutlinedTextField(value = txtCorreo, onValueChange = { txtCorreo = it }, label = { Text("Correo") })
 
                 if (mensajeError.isNotEmpty()) {
                     Text(mensajeError, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
@@ -61,8 +76,8 @@ fun FormularioContacto(
         confirmButton = {
             Button(onClick = {
                 try {
-                    val nuevoContacto = Contacto(txtNombre, fechaSeleccionada, txtTelefono, txtCorreo)
-                    onSave(nuevoContacto)
+                    val contactoGuardado = Contacto(txtNombre, fechaSeleccionada, txtTelefono, txtCorreo)
+                    onSave(contactoGuardado)
                 } catch (e: Exception) {
                     mensajeError = e.message ?: "Datos inválidos. Revisa el formato del correo."
                 }
@@ -87,8 +102,6 @@ fun FormularioContacto(
             dismissButton = {
                 TextButton(onClick = { mostrarCalendario = false }) { Text("Cancelar") }
             }
-        ) {
-            DatePicker(state = datePickerState)
-        }
+        ) { DatePicker(state = datePickerState) }
     }
 }
