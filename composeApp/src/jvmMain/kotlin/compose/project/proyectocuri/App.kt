@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import controllers.ContactoController
+import models.Contacto
 import ui.components.FormularioContacto
 import ui.components.MenuFiltros
 import ui.components.TarjetaContacto
@@ -19,8 +20,8 @@ fun App() {
     var listaCompleta by remember { mutableStateOf(controller.readAll()) }
     var mostrarFormulario by remember { mutableStateOf(false) }
     var textoBusqueda by remember { mutableStateOf("") }
+    var contactoParaBorrar by remember { mutableStateOf<Contacto?>(null) }
 
-    // Buscador reactivo
     val listaMostrada = if (textoBusqueda.isBlank()) {
         listaCompleta
     } else {
@@ -33,14 +34,12 @@ fun App() {
             Button(
                 onClick = { mostrarFormulario = true },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
-            ) {
-                Text("Agregar contacto")
-            }
+            ) { Text("Agregar contacto") }
 
             OutlinedTextField(
                 value = textoBusqueda,
-                onValueChange = { textoBusqueda = it }, // Actualiza la búsqueda al teclear
-                label = { Text(" Buscar") },
+                onValueChange = { textoBusqueda = it },
+                label = { Text("Buscar") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -60,32 +59,54 @@ fun App() {
             Text("Directorio", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(8.dp))
 
-            //Lista de contactos
             LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
                 items(listaMostrada) { contacto ->
                     TarjetaContacto(
                         contacto = contacto,
                         onDeleteClick = {
-                            controller.delete(contacto)
-                            listaCompleta = controller.readAll()
+                            // En lugar de borrarlo directamente, lo guardamos en el estado
+                            // Esto detonará automáticamente el AlertDialog de abajo
+                            contactoParaBorrar = contacto
                         },
                         onEditClick = {
-                            // todo: logica de edicion xd
+                            TODO("Implementar la lógica de edición")
                         }
                     )
                 }
             }
+        }
 
-            if (mostrarFormulario) {
-                FormularioContacto(
-                    onDismiss = { mostrarFormulario = false },
-                    onSave = { nuevoContacto ->
-                        controller.create(nuevoContacto)
-                        listaCompleta = controller.readAll() // Refrescamos la lista original
-                        mostrarFormulario = false
-                    }
-                )
-            }
+        // CONFIRMACIÓN DE BORRADO
+        if (contactoParaBorrar != null) {
+            AlertDialog(
+                onDismissRequest = { contactoParaBorrar = null }, // se cancela con missclick
+                title = { Text("Confirmar eliminación") },
+                text = { Text("¿Estás seguro de que deseas eliminar a ${contactoParaBorrar?.name}? Esta acción no se puede deshacer.") },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            controller.delete(contactoParaBorrar!!)
+                            listaCompleta = controller.readAll()
+                            contactoParaBorrar = null
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                    ) { Text("Sí, eliminar")}
+                }, dismissButton = {
+                    TextButton(onClick = { contactoParaBorrar = null })
+                    { Text("Cancelar") }
+                }
+            )
+        }
+
+        if (mostrarFormulario) {
+            FormularioContacto(
+                onDismiss = { mostrarFormulario = false },
+                onSave = { nuevoContacto ->
+                    controller.create(nuevoContacto)
+                    listaCompleta = controller.readAll()
+                    mostrarFormulario = false
+                }
+            )
         }
     }
 }
