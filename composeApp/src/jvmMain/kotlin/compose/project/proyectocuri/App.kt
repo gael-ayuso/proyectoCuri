@@ -22,6 +22,9 @@ fun App() {
     var listaContactos by remember { mutableStateOf(controller.readAll()) }
     var mostrarFormulario by remember { mutableStateOf(false) }
 
+    // Guarda lo que el usuario escribe en la barra de búsqueda
+    var textoBusqueda by remember { mutableStateOf("") }
+
     MaterialTheme {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             Button(
@@ -30,25 +33,62 @@ fun App() {
             ) {
                 Text("Agregar contacto")
             }
+
             Spacer(modifier = Modifier.height(16.dp))
 
+            //Busqueda
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedTextField(
+                    value = textoBusqueda,
+                    onValueChange = { textoBusqueda = it },
+                    label = { Text("Buscar nombre exacto...") },
+                    modifier = Modifier.weight(1f) // Toma el espacio restante
+                )
+
+                Button(onClick = {
+                    if (textoBusqueda.isNotBlank()) {
+                        val encontrado = controller.readByName(textoBusqueda)
+                        // Si lo encuentra, hace una lista de 1 elemento. Si no, lista vacía.
+                        listaContactos = if (encontrado != null) listOf(encontrado) else emptyList()
+                    }
+                }) {
+                    Text("Buscar")
+                }
+
+                Button(onClick = {
+                    textoBusqueda = "" // Limpia el texto
+                    listaContactos = controller.readAll() // Recarga all
+                }) {
+                    Text("Ver Todos")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
             Text("Lista de Contactos", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(8.dp))
 
+            //Lista de contactos
             ListaContactos(
                 contactos = listaContactos,
                 onDelete = { contactoABorrar ->
                     controller.delete(contactoABorrar)
+                    textoBusqueda = ""
                     listaContactos = controller.readAll()
                 }
             )
         }
 
+        // --- FORMULARIO EMERGENTE ---
         if (mostrarFormulario) {
             FormularioContacto(
                 onDismiss = { mostrarFormulario = false },
                 onSave = { nuevoContacto ->
                     controller.create(nuevoContacto)
+                    textoBusqueda = "" // Limpiamos búsqueda al guardar
                     listaContactos = controller.readAll()
                     mostrarFormulario = false
                 }
