@@ -43,6 +43,32 @@ fun App() {
                 modifier = Modifier.fillMaxWidth()
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Botones de ordenamiento
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { listaCompleta = controller.obtenerContactosOrdenAlfabetico() },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                ) { Text("A-Z") }
+
+                Button(
+                    onClick = { listaCompleta = controller.obtenerContactosPorCumpleanosProximo() },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                ) { Text("Cumpleanios") }
+
+                Button(
+                    onClick = { listaCompleta = controller.readAll() },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                ) { Text("Restaurar") }
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
             Text("Directorio", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(8.dp))
