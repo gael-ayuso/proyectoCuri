@@ -3,6 +3,7 @@ package controllers
 import models.Contacto
 import models.ContactoDAO
 import models.ContactoDAOJSON
+import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
@@ -42,8 +43,13 @@ class ContactoController : ContactoDAO {
         val today = LocalDate.now()
 
         return dao.readAll().sortedBy { contacto ->
-            // Cambiamos el año del cumpleaños al año actual para comparar los diasw
-            val cumpleEsteAno = contacto.birthDate.withYear(today.year)
+            // Cambiamos el año del cumpleaños al año actual para comparar los dias
+            val cumpleEsteAno = try {
+                contacto.birthDate.withYear(today.year)
+            } catch (_: DateTimeException) {
+                // Ajuste para años no bisiestos
+                LocalDate.of(today.year, 2, 28)
+            }
 
             // Si el cumpleaños ya paso, calculamos los dias para el proximo año
             val proximoCumple = if (cumpleEsteAno.isBefore(today)) {

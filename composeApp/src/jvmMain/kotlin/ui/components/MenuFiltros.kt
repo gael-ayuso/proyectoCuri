@@ -1,8 +1,11 @@
 package ui.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MenuFiltros(
@@ -25,12 +28,19 @@ fun MenuFiltros(
                 DropdownMenuItem(
                     text = { Text(opcion) },
                     onClick = {
-                        seleccionActual = opcion
                         expandido = false
+                        seleccionActual = opcion
                         onOrdenCambio(index)
                     }
                 )
             }
         }
     }
+}
+@Preview (showBackground = true, backgroundColor = 0xFFFFFFFF, showSystemUi = true)
+@Composable
+fun MenuFiltrosPreview() {
+    MenuFiltros(
+        onOrdenCambio = {}
+    )
 }
