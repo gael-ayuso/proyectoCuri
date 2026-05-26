@@ -161,8 +161,6 @@ class ContactoController : ContactoDAO {
 }
 ```
 
-Esta clase se encarga de hacer llamadas a un objecto `ContactoDAOJSON` el cual se encarga de leer, modificar y eliminar datos del `JSON`. 
-
 #### ContactoDAOJSON 📄
 
 Esta clase implementa la interfaz `ContactoDAO`. Se encarga de la logica detras de como interpretar el archivo `JSON` y extraer los datos.
@@ -243,7 +241,7 @@ Es una función de Kotlin Compose que se encarga de dibujar la tarjeta de contac
 *Tarjeta expandida*
 
 ![[tarjeta expandida.png]]
-##### Código Fuente Componente Tarjeta Contacto
+##### Código Tarjeta Contacto
 
 ```kotlin
 package ui.components
@@ -344,7 +342,7 @@ fun TarjetaContacto(
 *Menú filtros (Expandido)*
 
 ![[menu filtros expandido.png]]
-##### Código Fuente Componente Menú Filtros
+##### Código Menú Filtros
 
 ```kotlin
 package ui.components
@@ -399,7 +397,7 @@ Es un pop up que se visualiza cuando el usuario desea editar o añadir un nuevo 
 *Formulario Contacto*
 
 ![[formulario.png]]
-##### Código Fuente Componente Formulario Contacto
+##### Código Formulario Contacto
 
 ```kotlin
 package ui.components
@@ -548,7 +546,7 @@ Esta función se encarga de unir los componentes previamente expuestos. Organiz�
 *Pantalla de inicio de la App*
 
 ![[App.png]]
-##### Código Fuente Principal App.kt
+##### Código Principal App.kt
 
 
 ```kotlin
