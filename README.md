@@ -235,7 +235,7 @@ Es una función de Kotlin Compose que se encarga de dibujar la tarjeta de contac
 
 *Tarjeta contraída*
 
-![[imgs/tarjeta.png]]
+![tarjeta.png](/imgs/tarjeta.png)
 
 ---
 *Tarjeta expandida*
