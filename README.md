@@ -240,7 +240,7 @@ Es una función de Kotlin Compose que se encarga de dibujar la tarjeta de contac
 ---
 *Tarjeta expandida*
 
-![[tarjeta expandida.png]]
+![tarjeta expandida.png](/imgs/tarjeta expandida.png)
 ##### Código Tarjeta Contacto
 
 ```kotlin
@@ -336,12 +336,12 @@ fun TarjetaContacto(
 
 *Menú filtros (Por defecto)*
 
-![[menu filtros.png]]
+![menu filtros.png](/imgs/menu filtros.png)
 
 ---
 *Menú filtros (Expandido)*
 
-![[menu filtros expandido.png]]
+![menu filtros expandido.png](/imgs/menu filtros expandido.png)
 ##### Código Menú Filtros
 
 ```kotlin
@@ -396,7 +396,7 @@ Es un pop up que se visualiza cuando el usuario desea editar o añadir un nuevo 
 
 *Formulario Contacto*
 
-![[formulario.png]]
+![formulario.png](/imgs/formulario.png)
 ##### Código Formulario Contacto
 
 ```kotlin
@@ -545,7 +545,7 @@ Esta función se encarga de unir los componentes previamente expuestos. Organiz�
 
 *Pantalla de inicio de la App*
 
-![[App.png]]
+![App.png](/imgs/App.png)
 ##### Código Principal App.kt
 
 
@@ -678,24 +678,24 @@ fun App() {
 
 *Pagina principal*
 
-![[App.png|697]]
+![App.png](/imgs/App.png)
 
 ---
 *Búsqueda de contactos*
 
-![[Pasted image 20260525200355.png]]
+![Pasted image 20260525200355.png](/imgs/Pasted image 20260525200355.png)
 
 ---
 *Adición de contactos*
 
-![[Pasted image 20260525200623.png]]
+![Pasted image 20260525200623.png](/imgs/Pasted image 20260525200623.png)
 
 ---
 *Edición de datos de contactos*
 
-![[Pasted image 20260525200411.png|697]]
+![Pasted image 20260525200411.png](/imgs/Pasted image 20260525200411.png)
 
 ---
 *Eliminación de contactos*
 
-![[Pasted image 20260525200428.png]]
+![Pasted image 20260525200428.png](/imgs/Pasted image 20260525200428.png)
