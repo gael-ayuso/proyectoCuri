@@ -17,14 +17,14 @@
 3. [Clases](#Clases)
    - [Contacto](#Contacto%20👤)
    - [LocalDateSerializer](#LocalDateSerializer)
-   - [ContactoController](#ContactoController%20🎛️)
-   - [ContactoDAOJSON](#ContactoDAOJSON%20📄)
-4. [Interfaz Gráfica (UI)](#Interfaz%20Grafica%20🖥️)
-   - [Tarjeta Contacto](#Tarjeta%20Contacto)
-   - [Menú filtros](#Menú%20filtros)
-   - [Formulario Contacto](#Formulario%20Contacto)
+   - [ContactoController](#ContactoController-🎛️)
+   - [ContactoDAOJSON](#ContactoDAOJSON-📄)
+4. [Interfaz Gráfica (UI)](#Interfaz-Grafica-🖥️)
+   - [Tarjeta Contacto](#Tarjeta-Contacto)
+   - [Menú filtros](#Menú-filtros)
+   - [Formulario Contacto](#Formulario-Contacto)
    - [App](#App)
-5. [Imágenes de ejecución](#imágenes%20de%20ejecución)
+5. [Imágenes de ejecución](#imágenes-de-ejecución)
 
 ---
 ## Organización del Proyecto
@@ -341,7 +341,7 @@ fun TarjetaContacto(
 ---
 *Menú filtros (Expandido)*
 
-![menu filtros expandido.png](/imgs/menu filtros expandido.png)
+![menu filtros expandido.png](imgs/menu filtros expandido.png)
 ##### Código Menú Filtros
 
 ```kotlin
